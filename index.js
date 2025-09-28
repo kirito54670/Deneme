@@ -17,7 +17,7 @@ app.get('/api/card', async (req, res) => {
   try {
     const { kullanici, itibar, arkaplan, avatar } = req.query;
 
-    if (!kullanici  !itibar  !arkaplan || !avatar) {
+    if (!kullanici ||  !itibar  !arkaplan || !avatar) {
       return res.status(400).json({
         success: false,
         error: 'kullanici, itibar, arkaplan, avatar parametrelerini boş bırakmaman lazım!'
