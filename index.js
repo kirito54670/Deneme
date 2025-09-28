@@ -73,7 +73,6 @@ async function drawBackground(ctx, width, height, backgroundUrl) {
     drawDefaultBackground(ctx, width, height);
   }
 }
-[01:29]
 function drawDefaultBackground(ctx, width, height) {
   const gradient = ctx.createLinearGradient(0, 0, width, height);
   gradient.addColorStop(0, '#1a0033');
@@ -139,7 +138,6 @@ function drawText(ctx, kullanici, itibar) {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
   drawTextWithShadow(ctx, kullanici, textStartX, 40);
-[01:29]
 ctx.fillStyle = '#FFD700';
   ctx.font = 'bold 26px Arial, sans-serif';
   drawTextWithShadow(ctx, 'İtibar', textStartX, 88);
