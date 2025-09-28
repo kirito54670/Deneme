@@ -28,7 +28,6 @@ app.get('/api/card', async (req, res) => {
     const height = 160;
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');
-[01:29]
 ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
