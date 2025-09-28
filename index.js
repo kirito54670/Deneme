@@ -5,8 +5,8 @@ const app = express();
 
 // Fontları yükle (opsiyonel)
 try {
-  registerFont(path.join(dirname, 'fonts', 'Roboto-Regular.ttf'), { family: 'Roboto' });
-  registerFont(path.join(dirname, 'fonts', 'Roboto-Bold.ttf'), { family: 'Roboto', weight: 'bold' });
+  registerFont(path.join(__dirname, 'fonts', 'Roboto-Regular.ttf'), { family: 'Roboto' });
+  registerFont(path.join(__dirname, 'fonts', 'Roboto-Bold.ttf'), { family: 'Roboto', weight: 'bold' });
   console.log('Roboto Font Başarıyla Yüklendi');
 } catch (error) {
   console.log('Fontlar bulunamadı, sistem fontları kullanılacak.');
@@ -28,14 +28,14 @@ app.get('/api/card', async (req, res) => {
     const height = 160;
     const canvas = createCanvas(width, height);
     const ctx = canvas.getContext('2d');
-ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
     await drawSimpleCard(ctx, width, height, arkaplan, avatar, kullanici, itibar);
 
     res.setHeader('Content-Type', 'image/png');
     res.setHeader('Cache-Control', 'public, max-age=3600');
-    res.setHeader('Access-Control-Allow-Origin', '');
+    res.setHeader('Access-Control-Allow-Origin', '*');
 
     const buffer = canvas.toBuffer('image/png');
     res.send(buffer);
@@ -57,7 +57,7 @@ async function drawBackground(ctx, width, height, backgroundUrl) {
   try {
     const bgImage = await loadImage(backgroundUrl);
     const scale = Math.max(width / bgImage.width, height / bgImage.height);
-    const scaledWidth = bgImage.width scale;
+    const scaledWidth = bgImage.width * scale;
     const scaledHeight = bgImage.height * scale;
     const x = (width - scaledWidth) / 2;
     const y = (height - scaledHeight) / 2;
@@ -73,6 +73,7 @@ async function drawBackground(ctx, width, height, backgroundUrl) {
     drawDefaultBackground(ctx, width, height);
   }
 }
+
 function drawDefaultBackground(ctx, width, height) {
   const gradient = ctx.createLinearGradient(0, 0, width, height);
   gradient.addColorStop(0, '#1a0033');
@@ -88,7 +89,7 @@ async function drawAvatar(ctx, avatarUrl) {
   const avatarY = 25;
 
   ctx.beginPath();
-  ctx.arc(avatarX + avatarSize/2, avatarY + avatarSize/2, avatarSize/2 + 3, 0, 2 * Math.PI);
+  ctx.arc(avatarX + avatarSize / 2, avatarY + avatarSize / 2, avatarSize / 2 + 3, 0, 2 * Math.PI);
   ctx.fillStyle = 'white';
   ctx.fill();
 
@@ -96,7 +97,7 @@ async function drawAvatar(ctx, avatarUrl) {
     const avatarImage = await loadImage(avatarUrl);
     ctx.save();
     ctx.beginPath();
-    ctx.arc(avatarX + avatarSize/2, avatarY + avatarSize/2, avatarSize/2, 0, 2 * Math.PI);
+    ctx.arc(avatarX + avatarSize / 2, avatarY + avatarSize / 2, avatarSize / 2, 0, 2 * Math.PI);
     ctx.closePath();
     ctx.clip();
     ctx.drawImage(avatarImage, avatarX, avatarY, avatarSize, avatarSize);
@@ -108,14 +109,14 @@ async function drawAvatar(ctx, avatarUrl) {
 
 function drawDefaultAvatar(ctx, x, y, size) {
   ctx.beginPath();
-  ctx.arc(x + size/2, y + size/2, size/2, 0, 2 * Math.PI);
+  ctx.arc(x + size / 2, y + size / 2, size / 2, 0, 2 * Math.PI);
   ctx.fillStyle = '#cccccc';
   ctx.fill();
   ctx.fillStyle = '#999999';
   ctx.font = '45px Arial, sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('', x + size/2, y + size/2);
+  ctx.fillText('', x + size / 2, y + size / 2);
 }
 
 function drawTextWithShadow(ctx, text, x, y, shadowColor = 'rgba(0,0,0,0.6)', shadowBlur = 4) {
@@ -133,23 +134,25 @@ function drawTextWithShadow(ctx, text, x, y, shadowColor = 'rgba(0,0,0,0.6)', sh
 
 function drawText(ctx, kullanici, itibar) {
   const textStartX = 155;
+
   ctx.fillStyle = 'white';
   ctx.font = 'bold 32px Arial, sans-serif';
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
   drawTextWithShadow(ctx, kullanici, textStartX, 40);
-ctx.fillStyle = '#FFD700';
+
+  ctx.fillStyle = '#FFD700';
   ctx.font = 'bold 26px Arial, sans-serif';
   drawTextWithShadow(ctx, 'İtibar', textStartX, 88);
 
   ctx.fillStyle = 'white';
   ctx.font = 'bold 30px Arial, sans-serif';
   ctx.textBaseline = 'top';
-  drawTextWithShadow(ctx, : ${itibar}, textStartX + 70, 85);
+  drawTextWithShadow(ctx, `${itibar}`, textStartX + 70, 85);
 }
 
 // Render uyumlu port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(Server ${PORT} portunda çalışıyor);
+  console.log(`Server ${PORT} portunda çalışıyor 🚀`);
 });
